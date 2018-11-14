@@ -1,0 +1,39 @@
+/* block__elememt--modifier */
+/* Strictly Follow BEM Guide */
+
+.header {
+    width: 100%;
+    background-color: white;
+    padding: 10px;
+    height:66px;
+    display:flex;
+    position: fixed;
+    z-index: 3;
+    top: 0;
+    left:0;
+    border-bottom: 1px solid rgb(102, 51, 153);
+}
+
+.header__logo{
+  width:50px;
+  height: 50px;
+  margin-right:20px;
+}
+
+.header__search{
+ flex-basis:60%;
+}
+
+.header__links{
+  margin-left: auto;
+  display:flex;
+  justify-content: space-between;
+  align-self: center;
+}
+.header__link {
+  padding:5px;
+  color: purple;
+  font-weight:bold;
+}
+.header__link--active {}
+

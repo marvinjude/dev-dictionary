@@ -1,0 +1,57 @@
+.buttons {
+    display: flex;
+    flex-direction: column;
+}
+
+.container {
+    width: 80%;
+}
+
+.button {
+    border: 1px solid rgb(102, 51, 153);
+    padding:5px;
+    margin: 5px;
+    border-radius: 5px;
+    background-color: rgb(255, 255, 255);
+    color: rgb(102, 51, 153);
+    cursor: pointer;
+    transition: all 500ms ease-in;
+    display:flex;
+    justify-content: center;
+    align-items:center;
+}
+
+
+.skip {
+    border: none;
+    text-transform: uppercase;
+    background: none;
+    align-self: flex-end;
+    color: grey;
+    font-size: 15px;
+    cursor: pointer;
+}
+
+.question {
+    text-align: center;
+}
+
+.indicator {
+    transition: transform 500ms ease-in;
+    height: 12.5px;
+    border-radius: 50%;
+    margin: 3px;
+    background-color: grey;
+    border: none;
+}
+
+.scores {
+    align-self: flex-end;
+    padding: 5px;
+}
+
+.indicators {
+    display: flex;
+    justify-content: center;
+    padding: 10px;
+}

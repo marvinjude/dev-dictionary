@@ -1,0 +1,47 @@
+.container{
+}
+
+.title{
+   font-size: 50px;
+}
+
+.tags{
+  
+}
+.contribute {
+   height: 50px;
+   padding: 10px;
+   display: flex;
+   align-items: center;
+   justify-content: space-between;
+   border-top: 1px solid rebeccapurple;
+}
+.tag{
+  padding:5px; 
+  background-color:rgb(102, 51, 153);
+  border-radius: 5px;
+  color :white;
+  margin:5px;
+}
+
+.content{
+  margin-top:20px ;
+}
+
+.content p {
+  background: whitesmoke;
+  padding:30px;
+}
+
+.content pre {
+  margin-left:15px;
+  margin-right:15px ;
+}
+
+ .h{
+     padding-left: 30px;
+    font-size: 1.7411rem;
+    font-weight: bold;
+    line-height: 2.1rem;
+  }
+   
