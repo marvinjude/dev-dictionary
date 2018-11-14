@@ -2,44 +2,73 @@ import React, { Component } from 'react'
 import styles from './styles.module.css'
 import MaterialIcon from 'material-icons-react'
 import fetchQuestions from '../../utils/fetchQuestions'
-import Loader from '../../loader.jsx';
+import Loader from '../../loader.jsx'
+
+function Option({
+  optionValue,
+  optionKey,
+  setSelectedOptionKeyHandler,
+  rightOptionKey,
+  selectedOptionKey,
+  revealAns,
+}) {
+  function functionCalcStylesAndIcon() {
+    //right button to highlight
+    if (revealAns && optionKey == selectedOptionKey)
+      if (rightOptionKey == selectedOptionKey)
+        return { s: { backgroundColor: 'green', color: 'white' }, icon: ` ✔` }
+      else return { s: { backgroundColor: 'red', color: 'white' }, icon: ` ✖` }
+    else return { s: {}, icon: `` }
+  }
+
+  const { s, icon } = functionCalcStylesAndIcon()
+
+  return (
+    <button
+      className={styles.button}
+      onClick={() => setSelectedOptionKeyHandler(optionKey)}
+      style={{ ...s }}
+    >
+      {optionValue}
+      {icon}
+    </button>
+  )
+}
 
 class Options extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      selectedOption: null,
+      selectedOptionKey: null,
     }
   }
 
+  setSelectedOptionKey = selectedOptionKey => {
+    this.setState({ selectedOptionKey })
+    this.props.calcNewState(selectedOptionKey)
+  }
+
   render() {
-    const { options, revealAns, rightAnsKey, clickHandler } = this.props
+    const { options } = this.props
+    // _________________________
+    // | OptionKey| OptionValue|
+    // |_________ |____________|
+    // |      1   |   Jude     |
+    // |      2   |   Alice    |
+    // _________________________
 
     return (
       <div className={styles.buttons}>
-        {Object.keys(options).map(key => (
-          <button
-            key={key}
-            disabled={revealAns}
-            className={styles.button}
-            onClick={() => {
-              this.setState({ selectedOption: key })
-              clickHandler(key)
-            }}
-          >
-            {options[key]}
-
-            {/* TODO: function rightOrWrong() */}
-            {/* {revealAns && rightORWorong()} */}
-
-            {revealAns
-              ? key == this.state.selectedOption
-                ? rightAnsKey == this.state.selectedOption
-                  ? 'rite'
-                  : 'wring'
-                : ''
-              : ''}
-          </button>
+        {Object.keys(options).map(optionKey => (
+          <Option
+            key={optionKey}
+            optionValue={options[optionKey]}
+            optionKey={optionKey}
+            setSelectedOptionKeyHandler={this.setSelectedOptionKey}
+            rightOptionKey={this.props.rightOptionKey}
+            selectedOptionKey={this.state.selectedOptionKey}
+            revealAns={this.props.revealAns}
+          />
         ))}
       </div>
     )
@@ -75,7 +104,7 @@ class Questioneer extends Component {
 
   fetchQuestions() {
     fetchQuestions().then(questions => {
-      this.setState({ questions, loading:false })
+      this.setState({ questions, loading: false })
     })
   }
   moveToNextQuestion() {
@@ -139,9 +168,9 @@ class Questioneer extends Component {
             <div className={styles.buttons}>
               <Options
                 options={options}
-                rightAnsKey={rightAnsKey}
+                rightOptionKey={rightAnsKey}
+                calcNewState={this.calcNewState}
                 revealAns={this.state.revealAns}
-                clickHandler={this.calcNewState}
               />
             </div>
             <Indicator
@@ -150,7 +179,7 @@ class Questioneer extends Component {
             />
             <button className={styles.skip}>SKIP</button>
           </div>
-        )) ||<Loader fill ="purple"/>}
+        )) || <Loader fill="purple" />}
       </div>
     )
   }
