@@ -1,7 +1,8 @@
 ---
-path: "/blog/my-first-post"
+path: "/react/component2"
 date: "2017-11-07:10:10"
 title: "Component"
+dictionary: 'react'
 author: "@marvinjude"
 ---
 

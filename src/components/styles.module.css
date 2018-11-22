@@ -8,10 +8,15 @@
     overflow: hidden;
 }
 
+.results .result:nth-child(odd){
+  border-bottom: 1px solid rebeccapurple;
+}
+
 .result{
     padding:8px;
     margin:0;
 }
+
 .result:hover{
    background-color: rgba(128, 128, 128, 0.452);
 }
@@ -25,6 +30,7 @@
   border-radius: 10px;
   padding:10px;
   border:1px solid rebeccapurple;
+  height:40px;
 }
 .active{
   width: 100%; 

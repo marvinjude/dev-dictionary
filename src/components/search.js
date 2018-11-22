@@ -13,6 +13,7 @@ export default class Search extends Component {
     }
   }
   render() {
+
     const shouldCurve =
       this.state.results.length > 0 ||
       (this.state.query.length > 0 && this.state.results.length === 0)
@@ -28,9 +29,10 @@ export default class Search extends Component {
         <input
           className={shouldCurve ? styles.active : styles.input}
           type="text"
-          value={this.state.query}
+          // value={this.state.query}
           onChange={this.search}
           placeholder="search word"
+          defaultValue={this.props.value}
         />
         <ul className={styles.results}>
           {this.state.results.length > 0 &&
@@ -61,10 +63,13 @@ export default class Search extends Component {
     const query = evt.target.value
     this.index = this.getOrCreateIndex()
     const results = this.index
-      .search(query, { expand: true })
+      .search(query, {
+        expand: true,
+        fields:{
+          title: { boost: 2 },
+        },
+      })
       .map(({ ref }) => this.index.documentStore.getDoc(ref))
-
-    console.log(results)
 
     this.setState({ query, results })
   }

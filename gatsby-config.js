@@ -1,6 +1,18 @@
+var proxy = require('http-proxy-middleware')
+
 module.exports = {
   siteMetadata: {
     title: 'Gatsby Default Starter',
+  },
+  developMiddleware: app => {
+    app.use('/.netlify/functions/',
+      proxy({
+        target: "http://localhost:9000",
+        pathRewrite: {
+          "/.netlify/functions/": ""
+        }
+      })
+    )
   },
   plugins: [
     'gatsby-plugin-react-helmet',
@@ -89,13 +101,14 @@ module.exports = {
       resolve: `@gatsby-contrib/gatsby-plugin-elasticlunr-search`,
       options: {
         // Fields to index
-        fields: ['title', 'path'],
+        fields: ['title', 'path','dictionary'],
         // How to resolve each field's value for a supported node type
         resolvers: {
           // For any node of type MarkdownRemark, list how to resolve the fields' values
           MarkdownRemark: {
             title: node => node.frontmatter.title,
             path: node => node.frontmatter.path,
+            dictionary: node => node.frontmatter.dictionary
           },
         },
       },

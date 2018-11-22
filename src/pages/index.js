@@ -1,21 +1,68 @@
 import React from 'react'
-import { Link } from 'gatsby'
+import { Link, graphql } from 'gatsby'
 
-import Layout from '../components/layout'
-import Image from '../components/image'
+import styles from './index.module.css'
+import Search from '../components/search'
+import logo from '../images/logo.svg'
 
-const IndexPage = () => (
-  <Layout>
-    {/* word data comes in here */}
-    <h1>Hi people</h1>
-    <p>Welcome to your new Gatsby site.</p>
-    <p>Now go build something great.</p>
-    <div>
-      <Image />
+const IndexPage = ({ data }) => (
+  <div className={styles.container}>
+    <div className={styles.top}>
+      <div>
+        <h1 style={{fontFamily:"cursive"}}>dev-dictionary</h1>
+      </div>
+      <Search
+        searchIndex={data.siteSearchIndex.index}
+      />
     </div>
-    <Link to="/page-2/">Go to page 2</Link>
-    <Link to="/files/">Go to page Files</Link>
-  </Layout>
+    <div className={styles.bottom}>
+      <div className={styles.wod}>
+        <div className={styles.dictionaryLogo}>
+          <img src={logo} alt={'react'} />
+        </div>
+        <div className={styles.dictionaryLogoContent}>
+          <p className={styles.word}>Suspense</p>
+          <p className={styles.wordtext}>
+            the word means that there is still
+            more to be done in the wordld of the web
+            <Link to={'/react/lazy'}> more </Link>
+          </p>
+        </div>
+      </div>
+      <div className={styles.wod}>
+        <div className={styles.dictionaryLogo}>
+          <img src={logo} alt={'react'} />
+        </div>
+        <div className={styles.dictionaryLogoContent}>
+          <p className={styles.word}>Suspense</p>
+          <p className={styles.wordtext}>
+            the word means that there is still
+            more to be done in the wordld of the web
+            <Link to={'/react/suspense'}> more </Link>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
 )
 
 export default IndexPage
+
+export const query = graphql`
+  query SearchIndexQry {
+    siteSearchIndex {
+      index
+    }
+    allMarkdownRemark {
+      edges {
+        node {
+          frontmatter {
+            title
+            path
+            date
+          }
+        }
+      }
+    }
+  }
+`

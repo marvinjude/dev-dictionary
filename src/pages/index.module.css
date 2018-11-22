@@ -1,0 +1,51 @@
+.centeredFlex{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+.container{
+    composes:centeredFlex;
+    height:100vh;
+    flex-direction: column;
+}
+
+.word{
+ margin-bottom:0;
+ font-weight:bold;
+}
+
+.wordtext{
+
+}
+
+.top{
+ composes:centeredFlex;
+ flex-basis: 70%;
+ width: 100%;
+ flex-direction: column; 
+}
+
+.bottom{
+ display: flex;
+ width: 100%;
+ flex-basis: 30%;
+ padding:20px;
+ justify-content: space-around;
+}
+
+.wod{
+  background: whitesmoke;
+  display:flex;
+  padding: 5px;
+  width:277px;
+  border-radius: 20px;
+}
+.dictionaryLogo{
+  composes: centeredFlex;
+  flex-basis: 30%;
+}
+.dictionaryLogoContent {
+  flex: 1 1 0 ;
+}

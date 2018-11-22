@@ -3,6 +3,7 @@ import styles from './styles.module.css'
 import MaterialIcon from 'material-icons-react'
 import fetchQuestions from '../../utils/fetchQuestions'
 import Loader from '../../loader.jsx'
+import { helloData } from '../../utils/api'
 
 function Option({
   optionValue,
@@ -11,28 +12,53 @@ function Option({
   rightOptionKey,
   selectedOptionKey,
   revealAns,
+  type,
 }) {
   function functionCalcStylesAndIcon() {
     //right button to highlight
     if (revealAns && optionKey == selectedOptionKey)
       if (rightOptionKey == selectedOptionKey)
-        return { s: { backgroundColor: 'green', color: 'white' }, icon: ` ✔` }
-      else return { s: { backgroundColor: 'red', color: 'white' }, icon: ` ✖` }
+        //correct ans
+        return {
+          s: { backgroundColor: 'green', color: 'white', border: 'none' },
+          icon: ` ✔`,
+        }
+      else
+        return {
+          s: { backgroundColor: 'red', color: 'white', border: 'none' },
+          icon: ` ✖`,
+        }
     else return { s: {}, icon: `` }
   }
+  function generateOptionButton() {
+    const { s, icon } = functionCalcStylesAndIcon()
 
-  const { s, icon } = functionCalcStylesAndIcon()
+    if (type == 'A')
+      return (
+        <button
+          onClick={() => setSelectedOptionKeyHandler(optionKey)}
+          className={styles.button}
+          style={{ ...s }}
+          disabled={revealAns}
+        >
+          {optionValue}
+          {icon}
+        </button>
+      )
+    else
+      return (
+        <img
+          onClick={() => setSelectedOptionKeyHandler(optionKey)}
+          className={styles.imageoption}
+          style={{ ...s }}
+          disabled={revealAns}
+          src={optionValue}
+          alt="img"
+        />
+      )
+  }
 
-  return (
-    <button
-      className={styles.button}
-      onClick={() => setSelectedOptionKeyHandler(optionKey)}
-      style={{ ...s }}
-    >
-      {optionValue}
-      {icon}
-    </button>
-  )
+  return { ...generateOptionButton() }
 }
 
 class Options extends Component {
@@ -50,17 +76,22 @@ class Options extends Component {
 
   render() {
     const { options } = this.props
-    // _________________________
-    // | OptionKey| OptionValue|
-    // |_________ |____________|
-    // |      1   |   Jude     |
-    // |      2   |   Alice    |
-    // _________________________
+    // ______________________________
+    // | OptionKey|      OptionValue |
+    // |_________ |__________________|
+    // |      1   |   Jude   or url  |
+    // |      2   |   Alice  or url  |
+    // _______________________________
 
     return (
-      <div className={styles.buttons}>
+      <div
+        className={
+          this.props.type == 'A' ? styles.buttons : styles.imageoptions
+        }
+      >
         {Object.keys(options).map(optionKey => (
           <Option
+            type={this.props.type}
             key={optionKey}
             optionValue={options[optionKey]}
             optionKey={optionKey}
@@ -80,7 +111,6 @@ class Questioneer extends Component {
     this.state = {
       loading: true,
       revealAns: false,
-      finished: false,
       currentQuestion: 1,
       totalScore: 0,
       questions: {},
@@ -90,7 +120,9 @@ class Questioneer extends Component {
         3: undefined,
         4: undefined,
         5: undefined,
+        6: undefined,
       },
+      done: false,
     }
     this.moveToNextQuestion = this.moveToNextQuestion.bind(this)
     this.calcNewState = this.calcNewState.bind(this)
@@ -99,6 +131,9 @@ class Questioneer extends Component {
     this.fetchQuestions = this.fetchQuestions.bind(this)
   }
   componentDidMount() {
+    // let splitedPathName = window.location.pathname.split('/')
+    // let word = splitedPathName[splitedPathName.length - 1]
+
     this.fetchQuestions()
   }
 
@@ -108,12 +143,12 @@ class Questioneer extends Component {
     })
   }
   moveToNextQuestion() {
-    if (this.state.currentQuestion < 5) {
-      this.setState({
-        currentQuestion: this.state.currentQuestion + 1,
-        revealAns: false,
-      })
-    }
+    if (this.state.currentQuestion < Object.keys(this.state.questions).length) {
+    this.setState({
+      currentQuestion: this.state.currentQuestion + 1,
+      revealAns: false,
+    })
+    } else this.setState({ done: true })
   }
   // Returns new Score making sure not to give new score if it has been given
   getNewScore(currentQuestionKey, selectedOption) {
@@ -147,39 +182,53 @@ class Questioneer extends Component {
 
   render() {
     if (!this.state.loading) {
-      var { options, answer: rightAnsKey } = this.state.questions[
+      var { options, type, answer: rightAnsKey } = this.state.questions[
         this.state.currentQuestion
       ]
     }
 
     return (
       <div className={styles.container}>
-        {(!this.state.loading && (
-          <div>
-            <span className={styles.scores}>
-              Score •
-              <span style={{ color: 'green', paddingRight: '20px' }}>
-                {this.state.totalScore}
-              </span>
-            </span>
-            <p className={styles.question}>
-              {this.state.questions[this.state.currentQuestion].question}
-            </p>
-            <div className={styles.buttons}>
-              <Options
-                options={options}
-                rightOptionKey={rightAnsKey}
-                calcNewState={this.calcNewState}
-                revealAns={this.state.revealAns}
-              />
-            </div>
-            <Indicator
-              currentQuestionId={this.state.currentQuestion}
-              computeSheet={this.computeSheet}
-            />
-            <button className={styles.skip}>SKIP</button>
-          </div>
-        )) || <Loader fill="purple" />}
+        {(this.state.done && 'DONE') || (
+          <>
+            {(!this.state.loading && (
+              <>
+                <div className={styles.scores}>
+                  score •
+                  <span style={{ color: 'green', paddingRight: '20px' }}>
+                    {this.state.totalScore}
+                  </span>
+                </div>
+                <div className={styles.middle}>
+                  <p className={styles.question}>
+                    {this.state.questions[this.state.currentQuestion].question}
+                  </p>
+                    <Options
+                      options={options}
+                      rightOptionKey={rightAnsKey}
+                      calcNewState={this.calcNewState}
+                      revealAns={this.state.revealAns}
+                      type={type}
+                    />
+                </div>
+                <div className={styles.bottom}>
+                  <Indicator
+                    currentQuestionId={this.state.currentQuestion}
+                    computeSheet={this.computeSheet}
+                  />
+                  <button
+                    onClick={this.moveToNextQuestion}
+                    className={styles.skip}
+                  >
+                    SKIP
+                  </button>
+                </div>
+              </>
+            )) || (
+              <Loader fill="purple" style={{ width: '50px', height: '50px' }} />
+            )}
+          </>
+        )}
       </div>
     )
   }
@@ -189,7 +238,7 @@ class Questioneer extends Component {
 //Need to know about a sheet that know if user answer to question was wrong or right
 function Indicator({ currentQuestionId, computeSheet }) {
   const sheet = computeSheet()
-  const e = [1, 2, 3, 4, 5]
+  const e = [1, 2, 3, 4, 5, 6]
 
   const getColor = value => {
     if (value === undefined) return 'gray'

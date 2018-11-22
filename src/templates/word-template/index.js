@@ -3,11 +3,32 @@ import { graphql } from 'gatsby'
 import { WordData } from '../../components/Word-data'
 import Layout from '../../components/Layout'
 
-export default function Template({ data }) {
+//Make Theme Per Library When Generating Templates
+const themeObject = {
+  react: 'blue',
+  graphql: 'pink',
+}
+
+function generateTheme(pathname) {
+  let library = pathname.split('/')[1]
+  let searchQuery = pathname.split('/')[2]
+  return {
+    theme: themeObject[library],
+    searchQuery
+   };
+}
+
+export const ThemeContext = React.createContext();
+
+export default function Template({ data,location }) {
+  const theme = generateTheme(location.pathname);
+
   return (
-    <Layout>
-      <WordData data={data} />
-    </Layout>
+    <ThemeContext.Provider value={theme}>
+      <Layout>
+        <WordData data={data} />
+      </Layout>
+    </ThemeContext.Provider>
   )
 }
 

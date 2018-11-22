@@ -1,6 +1,7 @@
 ---
-path: '/blog/lazy'
+path: '/react/lazy'
 date: '2017-11-07'
+dictionary: 'react'
 title: 'suspense'
 ---
 <h2 class='sub-title'>Definition</h2>
